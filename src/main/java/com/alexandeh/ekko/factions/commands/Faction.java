@@ -9,13 +9,13 @@ import com.alexandeh.ekko.files.ConfigFile;
  * explicit permission from original author: Alexander Maxwell
  */
 
-public class FactionCommand {
+public class Faction {
 
     public Ekko main = Ekko.getInstance();
     public ConfigFile langConfig = main.getLangConfig();
     public ConfigFile mainConfig = main.getMainConfig();
 
-    public FactionCommand() {
+    public Faction() {
         main.getFramework().registerCommands(this);
     }
 }
