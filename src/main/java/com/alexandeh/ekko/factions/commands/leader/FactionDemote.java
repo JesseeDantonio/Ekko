@@ -1,6 +1,6 @@
-package com.alexandeh.ekko.factions.commands.officer;
+package com.alexandeh.ekko.factions.commands.leader;
 
-import com.alexandeh.ekko.factions.commands.FactionCommand;
+import com.alexandeh.ekko.factions.commands.Faction;
 import com.alexandeh.ekko.factions.type.PlayerFaction;
 import com.alexandeh.ekko.profiles.Profile;
 import com.alexandeh.ekko.utils.command.Command;
@@ -16,21 +16,21 @@ import java.util.UUID;
  * Use and or redistribution of compiled JAR file and or source code is permitted only if given
  * explicit permission from original author: Alexander Maxwell
  */
-public class FactionKickCommand extends FactionCommand {
-    @Command(name = "f.kick", aliases = {"faction.kick", "factions.kick"}, inFactionOnly = true, isOfficerOnly = true)
+public class FactionDemote extends Faction {
+    @Command(name = "f.demote", aliases = {"faction.demote", "factions.demote", "f.unmod", "factions.unmod", "faction.unmod", "f.unofficer", "factions.unofficer", "faction.unofficer", "faction.uncaptain", "f.uncaptain", "faction.uncaptain"}, inFactionOnly = true, isLeaderOnly = true)
     public void onCommand(CommandArgs command) {
         Player player = command.getPlayer();
 
         if (command.getArgs().length == 0) {
-            player.sendMessage(langConfig.getString("TOO_FEW_ARGS.KICK"));
+            player.sendMessage(langConfig.getString("TOO_FEW_ARGS.DEMOTE"));
             return;
         }
 
         Profile profile = Profile.getByUuid(player.getUniqueId());
         PlayerFaction playerFaction = profile.getFaction();
 
-        if (command.getArgs(0).equalsIgnoreCase(player.getName())) {
-            player.sendMessage(langConfig.getString("ERROR.KICK_YOURSELF"));
+        if (command.getArgs(0).equalsIgnoreCase(player.getName()) && player.getUniqueId().equals(playerFaction.getLeader())) {
+            player.sendMessage(langConfig.getString("ERROR.DEMOTE_YOURSELF"));
             return;
         }
 
@@ -57,22 +57,15 @@ public class FactionKickCommand extends FactionCommand {
             player.sendMessage(langConfig.getString("ERROR.NOT_IN_YOUR_FACTION").replace("%PLAYER%", name));
             return;
         }
-
-        if (playerFaction.getLeader().equals(uuid)) {
-            player.sendMessage(langConfig.getString("ERROR.CANT_KICK_LEADER"));
-            return;
-        }
         
-        if (playerFaction.getOfficers().contains(uuid) && playerFaction.getOfficers().contains(player.getUniqueId())) {
-            player.sendMessage(langConfig.getString("ERROR.CANT_KICK_OTHER_OFFICER"));
+        if (!playerFaction.getOfficers().contains(uuid)) {
+            player.sendMessage(langConfig.getString("ERROR.NOT_OFFICER").replace("%PLAYER%", name));
             return;
         }
 
-        playerFaction.sendMessage(langConfig.getString("ANNOUNCEMENTS.FACTION.PLAYER_KICKED").replace("%KICKED_PLAYER%", name).replace("%PLAYER%", player.getName()));
-
-        Profile kickProfile = Profile.getByUuid(uuid);
-        kickProfile.setFaction(null);
         playerFaction.getOfficers().remove(uuid);
-        playerFaction.getMembers().remove(uuid);
+        playerFaction.getMembers().add(uuid);
+
+        playerFaction.sendMessage(langConfig.getString("ANNOUNCEMENTS.FACTION.PLAYER_DEMOTED").replace("%PLAYER%", name).replace("%LEADER%", player.getName()));
     }
 }

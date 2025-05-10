@@ -12,7 +12,7 @@ import java.util.List;
  * Use and or redistribution of compiled JAR file and or source code is permitted only if given
  * explicit permission from original author: Alexander Maxwell
  */
-public class FactionHelpCommand extends FactionCommand {
+public class FactionHelp extends Faction {
     @Command(name = "f", aliases = {"faction", "factions"}, description = "Base command for all faction-related functions.")
     public void onCommand(CommandArgs command) {
         String[] args = command.getArgs();

@@ -21,9 +21,9 @@ import java.util.List;
  * Use and or redistribution of compiled JAR file and or source code is permitted only if given
  * explicit permission from original author: Alexander Maxwell
  */
-public class FactionChatCommand extends FactionCommand implements Listener {
+public class FactionChat extends Faction implements Listener {
 
-    public FactionChatCommand() {
+    public FactionChat() {
         Bukkit.getPluginManager().registerEvents(this, main);
     }
 

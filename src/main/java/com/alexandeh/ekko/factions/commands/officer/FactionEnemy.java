@@ -1,8 +1,6 @@
 package com.alexandeh.ekko.factions.commands.officer;
 
-import com.alexandeh.ekko.factions.Faction;
-import com.alexandeh.ekko.factions.commands.FactionCommand;
-import com.alexandeh.ekko.factions.events.FactionEnemyEvent;
+import com.alexandeh.ekko.factions.commands.Faction;
 import com.alexandeh.ekko.factions.type.PlayerFaction;
 import com.alexandeh.ekko.profiles.Profile;
 import com.alexandeh.ekko.utils.command.Command;
@@ -15,9 +13,9 @@ import org.bukkit.entity.Player;
  * Use and or redistribution of compiled JAR file and or source code is permitted only if given
  * explicit permission from original author: Alexander Maxwell
  */
-public class FactionEnemyCommand extends FactionCommand {
+public class FactionEnemy extends Faction {
 
-    public FactionEnemyCommand(){
+    public FactionEnemy(){
         if (!(mainConfig.getBoolean("FACTION_GENERAL.ALLIES.ENABLED"))) {
             main.getFramework().unregisterCommands(this);
         }
@@ -36,7 +34,7 @@ public class FactionEnemyCommand extends FactionCommand {
         PlayerFaction playerFaction = profile.getFaction();
 
         String factionName = command.getArgs(0);
-        Faction faction = Faction.getByName(factionName);
+        com.alexandeh.ekko.factions.Faction faction = com.alexandeh.ekko.factions.Faction.getByName(factionName);
         PlayerFaction enemyFaction = null;
 
         if (faction instanceof PlayerFaction) {
@@ -68,6 +66,6 @@ public class FactionEnemyCommand extends FactionCommand {
         playerFaction.sendMessage(langConfig.getString("ANNOUNCEMENTS.FACTION_NOW_ENEMY").replace("%FACTION%", enemyFaction.getName()));
         enemyFaction.sendMessage(langConfig.getString("ANNOUNCEMENTS.FACTION_NOW_ENEMY").replace("%FACTION%", playerFaction.getName()));
 
-        Bukkit.getPluginManager().callEvent(new FactionEnemyEvent(new PlayerFaction[]{playerFaction, enemyFaction}));
+        Bukkit.getPluginManager().callEvent(new com.alexandeh.ekko.factions.events.FactionEnemy(new PlayerFaction[]{playerFaction, enemyFaction}));
     }
 }

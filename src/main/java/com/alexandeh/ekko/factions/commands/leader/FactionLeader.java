@@ -1,6 +1,6 @@
 package com.alexandeh.ekko.factions.commands.leader;
 
-import com.alexandeh.ekko.factions.commands.FactionCommand;
+import com.alexandeh.ekko.factions.commands.Faction;
 import com.alexandeh.ekko.factions.type.PlayerFaction;
 import com.alexandeh.ekko.profiles.Profile;
 import com.alexandeh.ekko.utils.command.Command;
@@ -16,30 +16,24 @@ import java.util.UUID;
  * Use and or redistribution of compiled JAR file and or source code is permitted only if given
  * explicit permission from original author: Alexander Maxwell
  */
-public class FactionDemoteCommand extends FactionCommand {
-    @Command(name = "f.demote", aliases = {"faction.demote", "factions.demote", "f.unmod", "factions.unmod", "faction.unmod", "f.unofficer", "factions.unofficer", "faction.unofficer", "faction.uncaptain", "f.uncaptain", "faction.uncaptain"}, inFactionOnly = true, isLeaderOnly = true)
+public class FactionLeader extends Faction {
+    @Command(name = "f.leader", aliases = {"faction.leader", "factions.leader", "f.owner", "factions.owner", "faction.owner", "f.ownership", "factions.ownership", "faction.ownership"}, inFactionOnly = true, isLeaderOnly = true)
     public void onCommand(CommandArgs command) {
         Player player = command.getPlayer();
 
         if (command.getArgs().length == 0) {
-            player.sendMessage(langConfig.getString("TOO_FEW_ARGS.DEMOTE"));
+            player.sendMessage(langConfig.getString("TOO_FEW_ARGS.LEADER"));
             return;
         }
 
         Profile profile = Profile.getByUuid(player.getUniqueId());
         PlayerFaction playerFaction = profile.getFaction();
 
-        if (command.getArgs(0).equalsIgnoreCase(player.getName()) && player.getUniqueId().equals(playerFaction.getLeader())) {
-            player.sendMessage(langConfig.getString("ERROR.DEMOTE_YOURSELF"));
-            return;
-        }
-
-
         UUID uuid;
         String name;
-        Player toDemote = Bukkit.getPlayer(command.getArgs(0));
+        Player toLeader = Bukkit.getPlayer(command.getArgs(0));
 
-        if (toDemote == null) {
+        if (toLeader == null) {
             SimpleOfflinePlayer offlinePlayer = SimpleOfflinePlayer.getByName(command.getArgs(0));
             if (offlinePlayer != null) {
                 uuid = offlinePlayer.getUuid();
@@ -49,23 +43,31 @@ public class FactionDemoteCommand extends FactionCommand {
                 return;
             }
         } else {
-            uuid = toDemote.getUniqueId();
-            name = toDemote.getName();
+            uuid = toLeader.getUniqueId();
+            name = toLeader.getName();
         }
 
         if (!playerFaction.getAllPlayerUuids().contains(uuid)) {
-            player.sendMessage(langConfig.getString("ERROR.NOT_IN_YOUR_FACTION").replace("%PLAYER%", name));
-            return;
-        }
-        
-        if (!playerFaction.getOfficers().contains(uuid)) {
-            player.sendMessage(langConfig.getString("ERROR.NOT_OFFICER").replace("%PLAYER%", name));
+            player.sendMessage(langConfig.getString("ERROR.NOT_IN_YOUR_FACTION"));
             return;
         }
 
+        if (player.getUniqueId().equals(playerFaction.getLeader()) && uuid.equals(playerFaction.getLeader())) {
+            player.sendMessage(langConfig.getString("ERROR.ALREADY_LEADER"));
+            return;
+        }
+
+        if (uuid.equals(playerFaction.getLeader()) && !uuid.equals(player.getUniqueId())) {
+            player.sendMessage(langConfig.getString("ERROR.PLAYER_ALREADY_LEADER").replace("%PLAYER%", name));
+            return;
+        }
+
+        playerFaction.getMembers().remove(uuid);
         playerFaction.getOfficers().remove(uuid);
-        playerFaction.getMembers().add(uuid);
 
-        playerFaction.sendMessage(langConfig.getString("ANNOUNCEMENTS.FACTION.PLAYER_DEMOTED").replace("%PLAYER%", name).replace("%LEADER%", player.getName()));
+        playerFaction.getOfficers().add(player.getUniqueId());
+        playerFaction.setLeader(uuid);
+
+        playerFaction.sendMessage(langConfig.getString("ANNOUNCEMENTS.FACTION.PLAYER_TRANSFER_LEADERSHIP").replace("%PLAYER%", name).replace("%LEADER%", player.getName()));
     }
 }

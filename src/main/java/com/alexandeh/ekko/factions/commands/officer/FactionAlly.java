@@ -1,9 +1,7 @@
 package com.alexandeh.ekko.factions.commands.officer;
 
 import com.alexandeh.ekko.Ekko;
-import com.alexandeh.ekko.factions.Faction;
-import com.alexandeh.ekko.factions.commands.FactionCommand;
-import com.alexandeh.ekko.factions.events.FactionAllyEvent;
+import com.alexandeh.ekko.factions.commands.Faction;
 import com.alexandeh.ekko.factions.type.PlayerFaction;
 import com.alexandeh.ekko.profiles.Profile;
 import com.alexandeh.ekko.utils.command.Command;
@@ -21,9 +19,9 @@ import static net.kyori.adventure.text.Component.text;
  * Use and or redistribution of compiled JAR file and or source code is permitted only if given
  * explicit permission from original author: Alexander Maxwell
  */
-public class FactionAllyCommand extends FactionCommand {
+public class FactionAlly extends Faction {
     private Ekko ekko;
-    public FactionAllyCommand(Ekko ekko){
+    public FactionAlly(Ekko ekko){
         this.ekko = ekko;
         if (!(mainConfig.getBoolean("FACTION_GENERAL.ALLIES.ENABLED"))) {
             main.getFramework().unregisterCommands(this);
@@ -43,7 +41,7 @@ public class FactionAllyCommand extends FactionCommand {
         PlayerFaction playerFaction = profile.getFaction();
 
         String factionName = command.getArgs(0);
-        Faction faction = Faction.getByName(factionName);
+        com.alexandeh.ekko.factions.Faction faction = com.alexandeh.ekko.factions.Faction.getByName(factionName);
         PlayerFaction allyFaction = null;
 
         if (faction instanceof PlayerFaction) {
@@ -88,7 +86,7 @@ public class FactionAllyCommand extends FactionCommand {
             allyFaction.sendMessage(langConfig.getString("ANNOUNCEMENTS.FACTION_ALLIED").replace("%FACTION%", playerFaction.getName()));
             playerFaction.sendMessage(langConfig.getString("ANNOUNCEMENTS.FACTION_ALLIED").replace("%FACTION%", allyFaction.getName()));
 
-            Bukkit.getPluginManager().callEvent(new FactionAllyEvent(new PlayerFaction[]{playerFaction, allyFaction}));
+            Bukkit.getPluginManager().callEvent(new com.alexandeh.ekko.factions.events.FactionAlly(new PlayerFaction[]{playerFaction, allyFaction}));
         } else {
             playerFaction.getRequestedAllies().add(allyFaction.getUuid());
             playerFaction.sendMessage(langConfig.getString("ANNOUNCEMENTS.FACTION.PLAYER_SEND_ALLY_REQUEST").replace("%PLAYER%", player.getName()).replace("%FACTION%", allyFaction.getName()));

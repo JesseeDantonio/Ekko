@@ -1,8 +1,7 @@
 package com.alexandeh.ekko.factions.commands.leader;
 
-import com.alexandeh.ekko.factions.Faction;
-import com.alexandeh.ekko.factions.commands.FactionCommand;
-import com.alexandeh.ekko.factions.events.player.PlayerDisbandFactionEvent;
+import com.alexandeh.ekko.factions.commands.Faction;
+import com.alexandeh.ekko.factions.events.player.PlayerDisbandFaction;
 import com.alexandeh.ekko.factions.type.PlayerFaction;
 import com.alexandeh.ekko.profiles.Profile;
 import com.alexandeh.ekko.utils.command.Command;
@@ -17,7 +16,7 @@ import java.util.UUID;
  * Use and or redistribution of compiled JAR file and or source code is permitted only if given
  * explicit permission from original author: Alexander Maxwell
  */
-public class FactionDisbandCommand extends FactionCommand {
+public class FactionDisband extends Faction {
     @Command(name = "f.disband", aliases = {"faction.disband", "factions.disband"})
     public void onCommand(CommandArgs command) {
         Player player = command.getPlayer();
@@ -27,7 +26,7 @@ public class FactionDisbandCommand extends FactionCommand {
 
         if (command.getArgs().length >= 1 && player.hasPermission("ekko.admin")) {
             String name = command.getArgs(0);
-            Faction faction = PlayerFaction.getAnyByString(name);
+            com.alexandeh.ekko.factions.Faction faction = PlayerFaction.getAnyByString(name);
             if (faction != null) {
                 if (faction instanceof PlayerFaction) {
                     playerFaction = (PlayerFaction) faction;
@@ -63,10 +62,10 @@ public class FactionDisbandCommand extends FactionCommand {
 
         main.getEconomy().depositPlayer(player, playerFaction.getBalance());
 
-        Bukkit.getPluginManager().callEvent(new PlayerDisbandFactionEvent(player, playerFaction));
+        Bukkit.getPluginManager().callEvent(new PlayerDisbandFaction(player, playerFaction));
 
         Bukkit.broadcastMessage(langConfig.getString("ANNOUNCEMENTS.FACTION_DISBANDED").replace("%PLAYER%", player.getName()).replace("%NAME%", playerFaction.getName()));
-        Faction.getFactions().remove(playerFaction);
+        com.alexandeh.ekko.factions.Faction.getFactions().remove(playerFaction);
 
         for (PlayerFaction ally : playerFaction.getAllies()) {
             ally.getAllies().remove(playerFaction);

@@ -1,7 +1,7 @@
 package com.alexandeh.ekko.factions.commands.officer;
 
 import com.alexandeh.ekko.Ekko;
-import com.alexandeh.ekko.factions.commands.FactionCommand;
+import com.alexandeh.ekko.factions.commands.Faction;
 import com.alexandeh.ekko.factions.type.PlayerFaction;
 import com.alexandeh.ekko.profiles.Profile;
 import com.alexandeh.ekko.utils.command.Command;
@@ -9,7 +9,6 @@ import com.alexandeh.ekko.utils.command.CommandArgs;
 import com.alexandeh.ekko.utils.player.SimpleOfflinePlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -22,10 +21,10 @@ import static net.kyori.adventure.text.Component.text;
  * Use and or redistribution of compiled JAR file and or source code is permitted only if given
  * explicit permission from original author: Alexander Maxwell
  */
-public class FactionInviteCommand extends FactionCommand {
+public class FactionInvite extends Faction {
 
     private final Ekko ekko;
-    public FactionInviteCommand(Ekko ekko) {
+    public FactionInvite(Ekko ekko) {
         this.ekko = ekko;
     }
 

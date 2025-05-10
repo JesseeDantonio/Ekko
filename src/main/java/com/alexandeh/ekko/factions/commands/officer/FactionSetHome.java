@@ -1,6 +1,6 @@
 package com.alexandeh.ekko.factions.commands.officer;
 
-import com.alexandeh.ekko.factions.commands.FactionCommand;
+import com.alexandeh.ekko.factions.commands.Faction;
 import com.alexandeh.ekko.factions.type.PlayerFaction;
 import com.alexandeh.ekko.profiles.Profile;
 import com.alexandeh.ekko.utils.LocationSerialization;
@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
  * Use and or redistribution of compiled JAR file and or source code is permitted only if given
  * explicit permission from original author: Alexander Maxwell
  */
-public class FactionSetHomeCommand extends FactionCommand {
+public class FactionSetHome extends Faction {
     @Command(name = "f.sethome", aliases = {"faction.sethome", "factions.sethome", "factions.sethq", "f.sethq", "faction.sethq"}, inFactionOnly = true, isOfficerOnly = true)
     public void onCommand(CommandArgs command) {
         Player player = command.getPlayer();

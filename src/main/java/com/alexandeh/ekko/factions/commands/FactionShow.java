@@ -1,6 +1,5 @@
 package com.alexandeh.ekko.factions.commands;
 
-import com.alexandeh.ekko.factions.Faction;
 import com.alexandeh.ekko.factions.type.PlayerFaction;
 import com.alexandeh.ekko.profiles.Profile;
 import com.alexandeh.ekko.utils.LocationSerialization;
@@ -23,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  * Use and or redistribution of compiled JAR file and or source code is permitted only if given
  * explicit permission from original author: Alexander Maxwell
  */
-public class FactionShowCommand extends FactionCommand {
+public class FactionShow extends Faction {
     @Command(name = "f.show", aliases = {"faction.show", "factions.show", "f.i", "faction.i", "factions.i", "f.info", "faction.info", "factions.info"," f.who", "faction.who", "factions.who"})
     public void onCommand(CommandArgs command) {
         Player player = command.getPlayer();
@@ -48,19 +47,19 @@ public class FactionShowCommand extends FactionCommand {
         }
         String name = sb.toString().trim().replace(" ", "");
 
-        Set<Faction> matchedFactions = Faction.getAllByString(name);
+        Set<com.alexandeh.ekko.factions.Faction> matchedFactions = com.alexandeh.ekko.factions.Faction.getAllByString(name);
 
         if (matchedFactions.isEmpty()) {
             player.sendMessage(langConfig.getString("ERROR.NO_FACTIONS_FOUND").replace("%NAME%", name));
             return;
         }
 
-        for (Faction faction : matchedFactions) {
+        for (com.alexandeh.ekko.factions.Faction faction : matchedFactions) {
             sendFactionInformation(player, faction);
         }
     }
 
-    private void sendFactionInformation(Player player, Faction faction) { //This method is legit aids, need to fix this when I have time...
+    private void sendFactionInformation(Player player, com.alexandeh.ekko.factions.Faction faction) { //This method is legit aids, need to fix this when I have time...
         if (faction instanceof PlayerFaction) {
 
             PlayerFaction playerFaction = (PlayerFaction) faction;

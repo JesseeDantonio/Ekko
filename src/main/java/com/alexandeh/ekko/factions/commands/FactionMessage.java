@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
  * Use and or redistribution of compiled JAR file and or source code is permitted only if given
  * explicit permission from original author: Alexander Maxwell
  */
-public class FactionMessageCommand extends FactionCommand {
+public class FactionMessage extends Faction {
     @Command(name = "f.msg", aliases = {"faction.msg", "factions.msg", "f.message", "faction.message", "factions.message"})
     public void onCommand(CommandArgs command) {
         Player player = command.getPlayer();

@@ -1,6 +1,6 @@
 package com.alexandeh.ekko.factions.commands.officer;
 
-import com.alexandeh.ekko.factions.commands.FactionCommand;
+import com.alexandeh.ekko.factions.commands.Faction;
 import com.alexandeh.ekko.factions.type.PlayerFaction;
 import com.alexandeh.ekko.profiles.Profile;
 import com.alexandeh.ekko.utils.command.Command;
@@ -16,7 +16,7 @@ import java.util.UUID;
  * Use and or redistribution of compiled JAR file and or source code is permitted only if given
  * explicit permission from original author: Alexander Maxwell
  */
-public class FactionUninviteCommand extends FactionCommand {
+public class FactionUninvite extends Faction {
     @Command(name = "f.uninvite", aliases = {"faction.uninvite", "factions.uninvite", "f.uninv", "factions.uninv", "faction.uninv"}, inFactionOnly = true, isOfficerOnly = true) //any other aliases..?
     public void onCommand(CommandArgs command) {
         Player player = command.getPlayer();

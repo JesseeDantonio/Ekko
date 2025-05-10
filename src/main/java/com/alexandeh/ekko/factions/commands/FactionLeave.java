@@ -1,6 +1,6 @@
 package com.alexandeh.ekko.factions.commands;
 
-import com.alexandeh.ekko.factions.events.player.PlayerLeaveFactionEvent;
+import com.alexandeh.ekko.factions.events.player.PlayerLeaveFaction;
 import com.alexandeh.ekko.factions.type.PlayerFaction;
 import com.alexandeh.ekko.profiles.Profile;
 import com.alexandeh.ekko.utils.command.Command;
@@ -13,7 +13,7 @@ import org.bukkit.entity.Player;
  * Use and or redistribution of compiled JAR file and or source code is permitted only if given
  * explicit permission from original author: Alexander Maxwell
  */
-public class FactionLeaveCommand extends FactionCommand {
+public class FactionLeave extends Faction {
     @Command(name = "f.leave", aliases = {"faction.leave", "factions.leave", "f.quit", "factions.quit", "faction.quit"}, inFactionOnly = true)
     public void onCommand(CommandArgs command) {
         Player player = command.getPlayer();
@@ -35,6 +35,6 @@ public class FactionLeaveCommand extends FactionCommand {
 
         playerFaction.sendMessage(langConfig.getString("ANNOUNCEMENTS.FACTION.PLAYER_LEFT").replace("%PLAYER%", player.getName()));
 
-        Bukkit.getPluginManager().callEvent(new PlayerLeaveFactionEvent(player, playerFaction));
+        Bukkit.getPluginManager().callEvent(new PlayerLeaveFaction(player, playerFaction));
     }
 }

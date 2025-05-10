@@ -1,7 +1,6 @@
 package com.alexandeh.ekko.factions.commands;
 
-import com.alexandeh.ekko.factions.Faction;
-import com.alexandeh.ekko.factions.events.player.PlayerJoinFactionEvent;
+import com.alexandeh.ekko.factions.events.player.PlayerJoinFaction;
 import com.alexandeh.ekko.factions.type.PlayerFaction;
 import com.alexandeh.ekko.profiles.Profile;
 import com.alexandeh.ekko.utils.command.Command;
@@ -14,7 +13,7 @@ import org.bukkit.entity.Player;
  * Use and or redistribution of compiled JAR file and or source code is permitted only if given
  * explicit permission from original author: Alexander Maxwell
  */
-public class FactionJoinCommand extends FactionCommand {
+public class FactionJoin extends Faction {
     @Command(name = "f.join", aliases = {"faction.join", "factions.join", "f.accept", "factions.accept", "faction.accept"})
     public void onCommand(CommandArgs command) {
         Player player = command.getPlayer();
@@ -32,7 +31,7 @@ public class FactionJoinCommand extends FactionCommand {
         }
 
         String factionName = command.getArgs(0);
-        Faction faction = Faction.getByName(factionName);
+        com.alexandeh.ekko.factions.Faction faction = com.alexandeh.ekko.factions.Faction.getByName(factionName);
         PlayerFaction playerFaction = null;
 
         if (faction instanceof PlayerFaction) {
@@ -60,6 +59,6 @@ public class FactionJoinCommand extends FactionCommand {
         playerFaction.getMembers().add(player.getUniqueId());
         profile.setFaction(playerFaction);
 
-        Bukkit.getPluginManager().callEvent(new PlayerJoinFactionEvent(player, playerFaction));
+        Bukkit.getPluginManager().callEvent(new PlayerJoinFaction(player, playerFaction));
     }
 }

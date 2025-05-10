@@ -1,7 +1,6 @@
-package com.alexandeh.ekko.factions.commands;
+package com.alexandeh.ekko.factions.commands.officer;
 
-import com.alexandeh.ekko.factions.Faction;
-import com.alexandeh.ekko.factions.events.player.PlayerCreateFactionEvent;
+import com.alexandeh.ekko.factions.commands.Faction;
 import com.alexandeh.ekko.factions.type.PlayerFaction;
 import com.alexandeh.ekko.profiles.Profile;
 import com.alexandeh.ekko.utils.command.Command;
@@ -15,22 +14,19 @@ import org.bukkit.entity.Player;
  * Use and or redistribution of compiled JAR file and or source code is permitted only if given
  * explicit permission from original author: Alexander Maxwell
  */
-public class FactionCreateCommand extends FactionCommand {
-    @Command(name = "f.create", aliases = {"faction.create", "factions.create"})
+public class FactionRename extends Faction {
+    @Command(name = "f.tag", aliases = {"faction.rag", "factions.tag", "factions.rename", "f.rename", "faction.rename"}, inFactionOnly = true, isOfficerOnly = true)
     public void onCommand(CommandArgs command) {
         Player player = command.getPlayer();
 
         if (command.getArgs().length == 0) {
-            player.sendMessage(langConfig.getString("TOO_FEW_ARGS.CREATE"));
+            player.sendMessage(langConfig.getString("TOO_FEW_ARGS.RENAME"));
             return;
         }
 
         Profile profile = Profile.getByUuid(player.getUniqueId());
+        PlayerFaction playerFaction = profile.getFaction();
 
-        if (profile.getFaction() != null) {
-            player.sendMessage(langConfig.getString("ERROR.ALREADY_IN_FACTION"));
-            return;
-        }
 
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < command.getArgs().length; i++) {
@@ -61,16 +57,21 @@ public class FactionCreateCommand extends FactionCommand {
             }
         }
 
-        if (Faction.getByName(name) != null) {
-            player.sendMessage(langConfig.getString("ERROR.NAME_TAKEN"));
-            return;
+        com.alexandeh.ekko.factions.Faction faction = com.alexandeh.ekko.factions.Faction.getByName(name);
+
+        if (faction != null) {
+            if (faction.equals(playerFaction)) {
+                if (faction.getName().equals(name)) { //allow case changing but not exact duplicates. e.g "Faction" -> "factioN"
+                    player.sendMessage(langConfig.getString("ERROR.NAME_TAKEN"));
+                    return;
+                }
+            } else {
+                player.sendMessage(langConfig.getString("ERROR.NAME_TAKEN"));
+                return;
+            }
         }
 
-        PlayerFaction playerFaction = new PlayerFaction(name, player.getUniqueId(), null);
-        profile.setFaction(playerFaction);
-
-        Bukkit.broadcastMessage(langConfig.getString("ANNOUNCEMENTS.FACTION_CREATED").replace("%PLAYER%", player.getName()).replace("%NAME%", name));
-
-        Bukkit.getPluginManager().callEvent(new PlayerCreateFactionEvent(player, playerFaction));
+        Bukkit.broadcastMessage(langConfig.getString("ANNOUNCEMENTS.FACTION_RENAMED").replace("%OLD_NAME%", playerFaction.getName()).replace("%NEW_NAME%", name).replace("%PLAYER%", player.getName()));
+        playerFaction.setName(name);
     }
 }

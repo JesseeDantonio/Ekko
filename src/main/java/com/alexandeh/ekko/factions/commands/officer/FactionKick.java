@@ -1,6 +1,6 @@
-package com.alexandeh.ekko.factions.commands.leader;
+package com.alexandeh.ekko.factions.commands.officer;
 
-import com.alexandeh.ekko.factions.commands.FactionCommand;
+import com.alexandeh.ekko.factions.commands.Faction;
 import com.alexandeh.ekko.factions.type.PlayerFaction;
 import com.alexandeh.ekko.profiles.Profile;
 import com.alexandeh.ekko.utils.command.Command;
@@ -16,30 +16,30 @@ import java.util.UUID;
  * Use and or redistribution of compiled JAR file and or source code is permitted only if given
  * explicit permission from original author: Alexander Maxwell
  */
-public class FactionPromoteCommand extends FactionCommand {
-    @Command(name = "f.promote", aliases = {"faction.promote", "factions.promote", "f.mod", "factions.mod", "faction.mod", "f.officer", "factions.officer", "faction.officer", "faction.captain", "f.captain", "faction.captain"}, inFactionOnly = true, isLeaderOnly = true)
+public class FactionKick extends Faction {
+    @Command(name = "f.kick", aliases = {"faction.kick", "factions.kick"}, inFactionOnly = true, isOfficerOnly = true)
     public void onCommand(CommandArgs command) {
         Player player = command.getPlayer();
 
         if (command.getArgs().length == 0) {
-            player.sendMessage(langConfig.getString("TOO_FEW_ARGS.PROMOTE"));
+            player.sendMessage(langConfig.getString("TOO_FEW_ARGS.KICK"));
             return;
         }
 
         Profile profile = Profile.getByUuid(player.getUniqueId());
         PlayerFaction playerFaction = profile.getFaction();
 
-        if (command.getArgs(0).equalsIgnoreCase(player.getName()) && player.getUniqueId().equals(playerFaction.getLeader())) {
-            player.sendMessage(langConfig.getString("ERROR.PROMOTE_YOURSELF"));
+        if (command.getArgs(0).equalsIgnoreCase(player.getName())) {
+            player.sendMessage(langConfig.getString("ERROR.KICK_YOURSELF"));
             return;
         }
 
 
         UUID uuid;
         String name;
-        Player toPromote = Bukkit.getPlayer(command.getArgs(0));
+        Player toDemote = Bukkit.getPlayer(command.getArgs(0));
 
-        if (toPromote == null) {
+        if (toDemote == null) {
             SimpleOfflinePlayer offlinePlayer = SimpleOfflinePlayer.getByName(command.getArgs(0));
             if (offlinePlayer != null) {
                 uuid = offlinePlayer.getUuid();
@@ -49,8 +49,8 @@ public class FactionPromoteCommand extends FactionCommand {
                 return;
             }
         } else {
-            uuid = toPromote.getUniqueId();
-            name = toPromote.getName();
+            uuid = toDemote.getUniqueId();
+            name = toDemote.getName();
         }
 
         if (!playerFaction.getAllPlayerUuids().contains(uuid)) {
@@ -58,14 +58,21 @@ public class FactionPromoteCommand extends FactionCommand {
             return;
         }
 
-        if (playerFaction.getOfficers().contains(uuid)) {
-            player.sendMessage(langConfig.getString("ERROR.ALREADY_OFFICER").replace("%PLAYER%", name));
+        if (playerFaction.getLeader().equals(uuid)) {
+            player.sendMessage(langConfig.getString("ERROR.CANT_KICK_LEADER"));
+            return;
+        }
+        
+        if (playerFaction.getOfficers().contains(uuid) && playerFaction.getOfficers().contains(player.getUniqueId())) {
+            player.sendMessage(langConfig.getString("ERROR.CANT_KICK_OTHER_OFFICER"));
             return;
         }
 
-        playerFaction.getMembers().remove(uuid);
-        playerFaction.getOfficers().add(uuid);
+        playerFaction.sendMessage(langConfig.getString("ANNOUNCEMENTS.FACTION.PLAYER_KICKED").replace("%KICKED_PLAYER%", name).replace("%PLAYER%", player.getName()));
 
-        playerFaction.sendMessage(langConfig.getString("ANNOUNCEMENTS.FACTION.PLAYER_PROMOTED").replace("%PLAYER%", name).replace("%LEADER%", player.getName()));
+        Profile kickProfile = Profile.getByUuid(uuid);
+        kickProfile.setFaction(null);
+        playerFaction.getOfficers().remove(uuid);
+        playerFaction.getMembers().remove(uuid);
     }
 }

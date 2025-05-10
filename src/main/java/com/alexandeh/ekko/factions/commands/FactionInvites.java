@@ -15,7 +15,7 @@ import java.util.UUID;
  * Use and or redistribution of compiled JAR file and or source code is permitted only if given
  * explicit permission from original author: Alexander Maxwell
  */
-public class FactionInvitesCommand extends FactionCommand {
+public class FactionInvites extends Faction {
     @Command(name = "f.invites", aliases = {"faction.invites", "factions.invites"})
     public void onCommand(CommandArgs command) {
         Player player = command.getPlayer();
