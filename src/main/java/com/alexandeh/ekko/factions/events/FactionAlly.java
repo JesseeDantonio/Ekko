@@ -9,11 +9,11 @@ import lombok.Getter;
  * explicit permission from original author: Alexander Maxwell
  */
 @Getter
-public class FactionEnemyEvent extends FactionEvent {
+public class FactionAlly extends Faction {
 
     private PlayerFaction[] factions;
 
-    public FactionEnemyEvent(PlayerFaction[] factions) {
+    public FactionAlly(PlayerFaction[] factions) {
         this.factions = factions;
     }
 

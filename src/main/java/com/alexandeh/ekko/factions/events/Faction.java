@@ -8,7 +8,7 @@ import org.bukkit.event.HandlerList;
  * Use and or redistribution of compiled JAR file and or source code is permitted only if given
  * explicit permission from original author: Alexander Maxwell
  */
-public class FactionEvent extends Event {
+public class Faction extends Event {
 
     private static final HandlerList handlers = new HandlerList();
 
