@@ -1,6 +1,6 @@
 package com.alexandeh.ekko.factions.events.player;
 
-import com.alexandeh.ekko.factions.events.FactionEvent;
+import com.alexandeh.ekko.factions.events.Faction;
 import com.alexandeh.ekko.factions.type.PlayerFaction;
 import lombok.Getter;
 import org.bukkit.entity.Player;
@@ -11,12 +11,12 @@ import org.bukkit.entity.Player;
  * explicit permission from original author: Alexander Maxwell
  */
 @Getter
-public class PlayerDisbandFactionEvent extends FactionEvent {
+public class PlayerLeaveFaction extends Faction {
 
     private PlayerFaction faction;
     private Player player;
 
-    public PlayerDisbandFactionEvent(Player player, PlayerFaction faction) {
+    public PlayerLeaveFaction(Player player, PlayerFaction faction) {
         this.player = player;
         this.faction = faction;
     }
