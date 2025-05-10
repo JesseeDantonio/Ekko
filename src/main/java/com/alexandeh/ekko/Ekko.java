@@ -19,6 +19,7 @@ import com.alexandeh.ekko.utils.command.CommandFramework;
 import com.alexandeh.ekko.utils.player.PlayerUtility;
 import com.alexandeh.ekko.utils.player.SimpleOfflinePlayer;
 import lombok.Getter;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -58,12 +59,13 @@ import java.io.IOException;
 @Getter
 public class Ekko extends JavaPlugin {
 
+    @Getter
     private static Ekko instance;
-
     private CommandFramework framework;
     private ConfigFile mainConfig;
     private ConfigFile langConfig;
     private Economy economy;
+    private BukkitAudiences adventure;
 
     public void onEnable() {
         instance = this;
@@ -88,6 +90,10 @@ public class Ekko extends JavaPlugin {
             player.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
         }
 
+        if (adventure != null) {
+            adventure.close();
+        }
+
         try {
             SimpleOfflinePlayer.save(this);
         } catch (IOException e) {
@@ -100,7 +106,7 @@ public class Ekko extends JavaPlugin {
         new FactionDisbandCommand();
         new FactionCreateCommand();
         new FactionVersionCommand();
-        new FactionInviteCommand();
+        new FactionInviteCommand(this);
         new FactionJoinCommand();
         new FactionRenameCommand();
         new FactionPromoteCommand();
@@ -115,11 +121,13 @@ public class Ekko extends JavaPlugin {
         new FactionShowCommand();
         new FactionKickCommand();
         new FactionInvitesCommand();
-        new FactionAllyCommand();
+        new FactionAllyCommand(this);
         new FactionEnemyCommand();
         new FactionDepositCommand();
         new FactionWithdrawCommand();
     }
+
+
 
     private void registerListeners() {
         Bukkit.getPluginManager().registerEvents(new ProfileListeners(), this);
@@ -128,7 +136,9 @@ public class Ekko extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ClaimListeners(), this);
     }
 
-    public static Ekko getInstance() {
-        return instance;
+
+    public BukkitAudiences adventure() {
+        return adventure;
     }
+
 }

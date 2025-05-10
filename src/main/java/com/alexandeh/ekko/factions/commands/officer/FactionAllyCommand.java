@@ -1,5 +1,6 @@
 package com.alexandeh.ekko.factions.commands.officer;
 
+import com.alexandeh.ekko.Ekko;
 import com.alexandeh.ekko.factions.Faction;
 import com.alexandeh.ekko.factions.commands.FactionCommand;
 import com.alexandeh.ekko.factions.events.FactionAllyEvent;
@@ -7,9 +8,13 @@ import com.alexandeh.ekko.factions.type.PlayerFaction;
 import com.alexandeh.ekko.profiles.Profile;
 import com.alexandeh.ekko.utils.command.Command;
 import com.alexandeh.ekko.utils.command.CommandArgs;
-import mkremins.fanciful.FancyMessage;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import static net.kyori.adventure.text.Component.text;
 
 /**
  * Copyright 2016 Alexander Maxwell
@@ -17,8 +22,9 @@ import org.bukkit.entity.Player;
  * explicit permission from original author: Alexander Maxwell
  */
 public class FactionAllyCommand extends FactionCommand {
-
-    public FactionAllyCommand(){
+    private Ekko ekko;
+    public FactionAllyCommand(Ekko ekko){
+        this.ekko = ekko;
         if (!(mainConfig.getBoolean("FACTION_GENERAL.ALLIES.ENABLED"))) {
             main.getFramework().unregisterCommands(this);
         }
@@ -88,10 +94,11 @@ public class FactionAllyCommand extends FactionCommand {
             playerFaction.sendMessage(langConfig.getString("ANNOUNCEMENTS.FACTION.PLAYER_SEND_ALLY_REQUEST").replace("%PLAYER%", player.getName()).replace("%FACTION%", allyFaction.getName()));
             for (Player allyPlayer : allyFaction.getOnlinePlayers()) {
                 if (allyPlayer.getUniqueId().equals(allyFaction.getLeader())) {
-                    new FancyMessage()
-                            .text(langConfig.getString("ANNOUNCEMENTS.FACTION_RECEIVE_ALLY_REQUEST").replace("%FACTION%", playerFaction.getName()))
-                            .command("/f ally " + playerFaction.getName())
-                            .send(allyPlayer);
+                    Component fancyMessage = text(langConfig.getString("ANNOUNCEMENTS.FACTION_RECEIVE_ALLY_REQUEST").replace("%FACTION%", playerFaction.getName()))
+                            .clickEvent(ClickEvent.runCommand("/f ally " + factionName))
+                            .hoverEvent(HoverEvent.showText(text("Clique pour accepter l'alliance")));
+
+                    ekko.adventure().player(allyPlayer).sendMessage(fancyMessage);
                 } else {
                     allyPlayer.sendMessage(langConfig.getString("ANNOUNCEMENTS.FACTION_RECEIVE_ALLY_REQUEST").replace("%FACTION%", playerFaction.getName()));
                 }
