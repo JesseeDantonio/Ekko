@@ -16,7 +16,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
  * Use and or redistribution of compiled JAR file and or source code is permitted only if given
  * explicit permission from original author: Alexander Maxwell
  */
-public class ChatListeners implements Listener {
+public class Chat implements Listener {
 
     private Ekko main = Ekko.getInstance();
     private ConfigFile mainConfig = main.getMainConfig();

@@ -1,10 +1,10 @@
 package com.alexandeh.ekko.listeners;
 
-import com.alexandeh.ekko.factions.events.FactionAllyEvent;
-import com.alexandeh.ekko.factions.events.FactionEnemyEvent;
-import com.alexandeh.ekko.factions.events.player.PlayerDisbandFactionEvent;
-import com.alexandeh.ekko.factions.events.player.PlayerJoinFactionEvent;
-import com.alexandeh.ekko.factions.events.player.PlayerLeaveFactionEvent;
+import com.alexandeh.ekko.factions.events.FactionAlly;
+import com.alexandeh.ekko.factions.events.FactionEnemy;
+import com.alexandeh.ekko.factions.events.player.PlayerDisbandFaction;
+import com.alexandeh.ekko.factions.events.player.PlayerJoinFaction;
+import com.alexandeh.ekko.factions.events.player.PlayerLeaveFaction;
 import com.alexandeh.ekko.factions.type.PlayerFaction;
 import com.alexandeh.ekko.profiles.Profile;
 import org.bukkit.entity.Player;
@@ -19,10 +19,10 @@ import java.util.Set;
  * Use and or redistribution of compiled JAR file and or source code is permitted only if given
  * explicit permission from original author: Alexander Maxwell
  */
-public class ScoreboardListeners implements Listener {
+public class Scoreboard implements Listener {
 
     @EventHandler
-    public void onJoinFaction(PlayerJoinFactionEvent event) {
+    public void onJoinFaction(PlayerJoinFaction event) {
         for (Player player : event.getFaction().getOnlinePlayers()) {
             Profile profile = Profile.getByUuid(player.getUniqueId());
             profile.updateTab();
@@ -36,7 +36,7 @@ public class ScoreboardListeners implements Listener {
     }
 
     @EventHandler
-    public void onLeaveFaction(PlayerLeaveFactionEvent event) {
+    public void onLeaveFaction(PlayerLeaveFaction event) {
         Set<Player> toLoop = new HashSet<>(event.getFaction().getOnlinePlayers());
         toLoop.add(event.getPlayer());
         for (Player player : toLoop) {
@@ -52,7 +52,7 @@ public class ScoreboardListeners implements Listener {
     }
 
     @EventHandler
-    public void onDisbandFaction(PlayerDisbandFactionEvent event) {
+    public void onDisbandFaction(PlayerDisbandFaction event) {
         for (Player player : event.getFaction().getOnlinePlayers()) {
             Profile profile = Profile.getByUuid(player.getUniqueId());
             profile.updateTab();
@@ -67,7 +67,7 @@ public class ScoreboardListeners implements Listener {
 
 
     @EventHandler
-    public void onAllyFaction(FactionAllyEvent event) {
+    public void onAllyFaction(FactionAlly event) {
         for (PlayerFaction faction : event.getFactions()) {
             for (Player player : faction.getOnlinePlayers()) {
                 Profile profile = Profile.getByUuid(player.getUniqueId());
@@ -77,7 +77,7 @@ public class ScoreboardListeners implements Listener {
     }
 
     @EventHandler
-    public void onEnemyFaction(FactionEnemyEvent event) {
+    public void onEnemyFaction(FactionEnemy event) {
         for (PlayerFaction faction : event.getFactions()) {
             for (Player player : faction.getOnlinePlayers()) {
                 Profile profile = Profile.getByUuid(player.getUniqueId());
